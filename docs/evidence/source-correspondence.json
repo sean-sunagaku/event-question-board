@@ -1,0 +1,20 @@
+[
+  {
+    "app": "api",
+    "provenanceCommit": "1107a7a2e9413905e6e71c595554ed1161650bc4",
+    "verifiedSourceFiles": 51,
+    "allFilesMatch": true
+  },
+  {
+    "app": "participant",
+    "provenanceCommit": "1107a7a2e9413905e6e71c595554ed1161650bc4",
+    "verifiedSourceFiles": 51,
+    "allFilesMatch": true
+  },
+  {
+    "app": "admin",
+    "provenanceCommit": "1107a7a2e9413905e6e71c595554ed1161650bc4",
+    "verifiedSourceFiles": 51,
+    "allFilesMatch": true
+  }
+]

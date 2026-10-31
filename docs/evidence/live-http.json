@@ -1,0 +1,40 @@
+{
+  "observedAt": "2026-10-31T00:49:27.750Z",
+  "results": [
+    {
+      "service": "api",
+      "path": "/health",
+      "method": "GET",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "service": "participant",
+      "path": "/",
+      "method": "GET",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "service": "admin",
+      "path": "/",
+      "method": "GET",
+      "expected": 401,
+      "actual": 401
+    },
+    {
+      "service": "api",
+      "path": "/setup/demo",
+      "method": "POST",
+      "expected": 401,
+      "actual": 401
+    },
+    {
+      "service": "participant",
+      "path": "/bff/setup",
+      "method": "POST",
+      "expected": 403,
+      "actual": 403
+    }
+  ]
+}

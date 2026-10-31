@@ -1,0 +1,51 @@
+{
+  "scope": "production-ui",
+  "verificationSource": "Authenticated Chrome operated by source task 01a18f49-3a9a-7393-b295-eb7c11f28c96; reported to finishing task via codex_delegation",
+  "sourceTask": "https://chatgpt.com/local/01a18f49-3a9a-7393-b295-eb7c11f28c96",
+  "versions": {
+    "participant": 2,
+    "admin": 2,
+    "api": 2
+  },
+  "realChatGPTSignIn": true,
+  "explicitAdminEventSetup": true,
+  "questionId": "4f3d2b96-ea96-4504-b4cc-12cd376cb2ef",
+  "questionBody": "架空のデモ：AIを日々の小さな作業に取り入れるなら、どこから試すとよいですか？",
+  "post": true,
+  "voteCount": 1,
+  "afterUnvote": 0,
+  "answered": true,
+  "highlighted": true,
+  "automaticParticipantUpdateWithoutReload": true,
+  "viewports": [
+    {
+      "innerWidth": 1280,
+      "participantNoHorizontalOverflow": true,
+      "adminNoHorizontalOverflow": true
+    },
+    {
+      "innerWidth": 390,
+      "participantNoHorizontalOverflow": true,
+      "adminNoHorizontalOverflow": true,
+      "voteAndUnvote": true,
+      "answeredToggle": true,
+      "highlightToggle": true,
+      "automaticParticipantUpdateWithoutReload": true
+    }
+  ],
+  "finalState": {
+    "answered": 1,
+    "highlighted": 1,
+    "ownerVotes": 0
+  },
+  "screenshots": {
+    "location": "Source task Mac; files not attached to this Cloud checkout",
+    "files": [
+      "published-participant-1280.jpg",
+      "published-participant-390.jpg",
+      "published-admin-1280.jpg",
+      "published-admin-390.jpg"
+    ]
+  },
+  "independentCloudConfirmation": "Question and final status flags verified through live API, including after redeployment; see live-persistence.json"
+}

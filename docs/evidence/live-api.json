@@ -1,0 +1,217 @@
+{
+  "scope": "live-api-with-signed-service-assertions; browser sign-in is separate evidence",
+  "questionId": "a0fdc1b3-0078-4ece-8bdd-ed8bcf4f820d",
+  "results": [
+    {
+      "name": "health",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "公開一覧",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "未認証投稿の拒否",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "name": "入力検証",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "name": "架空の質問投稿",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "同時投票",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "投票解除",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "投票の再設定",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "未認証管理の拒否",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "name": "偽造role拒否",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "name": "参加者サービス資格情報拒否",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "name": "一般利用者の管理拒否",
+      "status": 403,
+      "expected": 403
+    }
+  ],
+  "concurrentVotes": 30,
+  "uniqueVotes": 1,
+  "observedAt": "2026-10-31T00:52:05.825386+00:00",
+  "voteAfterUnvote": 0,
+  "voteAfterReset": 1,
+  "authorizedAdminMutation": "not tested by this runner; requires separate browser evidence"
+}
