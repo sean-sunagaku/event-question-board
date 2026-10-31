@@ -57,7 +57,8 @@
 [本番ブラウザ結果](evidence/live-browser.json)は、依頼元タスクがログイン済みChromeで実施した結果の転記。Cloudが直接ブラウザ操作したものではない。
 本人Adminで準備→正規participantから架空と明示した質問を投稿→投票1→解除0→Adminで回答済み/強調→participantの手動再読込なしの両バッジ反映が成功。
 実寸innerWidth=1280/390の両画面で横はみ出しなし。390pxでも投票/解除、回答済みと強調の解除/再設定、自動反映が成功。
-スクリーンショット4枚は依頼元Macに保存済みで、このCloudのGit証拠には未添付。既存PNGはローカル検証画像なので本番画像とは扱わない。
+本番証拠zipのSHA-256 `9b5ebc3f3ae278a8f3c05330430b147a63f81fc05dbd10e4fe10a75c661f36d5` をCloudで照合し、JPEG4枚と[操作者の原結果JSON](evidence/published-browser-results.json)を保存。Cloudでも4枚を目視し、日本語の可読性・架空表記・状態バッジ・モバイル操作部の収まりを確認。秘密値の表示なし。
+[参加者1280](evidence/published-participant-1280.jpg)・[参加者390](evidence/published-participant-390.jpg)・[Admin1280](evidence/published-admin-1280.jpg)・[Admin390](evidence/published-admin-390.jpg)。既存PNGはローカル証拠、本番証拠はこのJPEGとJSON。
 
 [永続化証拠](evidence/live-persistence.json): 3サービスを同version 2で再deployし、API QAの質問と1票を保持。本人の画面検証完了後に最終状態をsnapshotし、APIをもう一度再deploy。公開APIとparticipant BFFの両方で、架空の質問2件の全フィールドがsnapshotと一致した。
 本人質問は回答済み=1・強調=1・票=0、API QA質問は票=1。テーブル/イベントを上書きしていない。
@@ -69,4 +70,4 @@
 ## 残作業と検証範囲
 
 受け入れ条件に関する追加実装・再公開は不要。最終記録のmain反映を完了すれば全体目標は完了。
-本番スクリーンショットのCloud/Git添付は未実施（依頼元Macに保存済み）。本番バックアップの復元訓練は今回の受け入れ条件外で未検証。手順と権限の注意はREADMEに記載。
+本番スクリーンショットと操作者原結果はCloudでハッシュ確認・目視してGitへ保存。本番バックアップの復元訓練は今回の受け入れ条件外で未検証。手順と権限の注意はREADMEに記載。

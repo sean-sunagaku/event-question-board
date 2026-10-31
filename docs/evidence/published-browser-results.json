@@ -1,0 +1,43 @@
+{
+  "observed_at": "2026-10-31T09:57:29+09:00",
+  "source_commit": "1107a7a2e9413905e6e71c595554ed1161650bc4",
+  "sites_version": 2,
+  "verification": "Published Sites, regular ChatGPT sign-in, browser UI operated by the coordinating Codex task",
+  "question": "架空のデモ：AIを日々の小さな作業に取り入れるなら、どこから試すとよいですか？",
+  "results": {
+    "admin_explicit_demo_setup": true,
+    "participant_question_post": true,
+    "vote_count": 1,
+    "after_unvote_count": 0,
+    "admin_answered": true,
+    "admin_highlighted": true,
+    "participant_automatic_update_without_reload": true,
+    "mobile_vote_and_unvote": true,
+    "mobile_answered_toggle_and_automatic_update": true,
+    "mobile_highlight_toggle_and_automatic_update": true
+  },
+  "viewports": [
+    {
+      "innerWidth": 1280,
+      "scrollWidth": 1265,
+      "apps": [
+        "participant",
+        "admin"
+      ]
+    },
+    {
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "apps": [
+        "participant",
+        "admin"
+      ]
+    }
+  ],
+  "final_demo_question_state": {
+    "answered": true,
+    "highlighted": true,
+    "current_user_voted": false
+  },
+  "temporary_viewport_overrides_cleared": true
+}
