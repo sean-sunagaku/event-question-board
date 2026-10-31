@@ -7,6 +7,9 @@ import {
   type Question,
 } from "@eqb/contracts";
 import { verify, requireAdmin, type Env } from "@eqb/core";
+// Preserve legacy Sites keys; OIDC keys have a disjoint outer namespace.
+const identityKey = (auth: {caller:string;sub:string}, env:Env) =>
+  env.AUTH_MODE === "oidc" ? `oidc:${auth.caller}:${auth.sub}` : auth.caller + ":" + auth.sub;
 export async function fetchAPI(request: Request, env: Env): Promise<Response> {
   try {
     const url = new URL(request.url);
@@ -39,7 +42,7 @@ export async function fetchAPI(request: Request, env: Env): Promise<Response> {
         ? null
         : await verify(request, env, raw);
     if (request.method === "GET" && !id) {
-      const user = auth ? auth.caller + ":" + auth.sub : "";
+      const user = auth ? identityKey(auth, env) : "";
       const order =
         url.searchParams.get("sort") === "new"
           ? "q.created_at DESC, q.id DESC"
@@ -65,7 +68,7 @@ export async function fetchAPI(request: Request, env: Env): Promise<Response> {
       await env.DB.prepare(
         "INSERT INTO questions (id,event_id,body,author_id,created_at) VALUES (?,?,?,?,?)",
       )
-        .bind(qid, event, body, auth.caller + ":" + auth.sub, Date.now())
+        .bind(qid, event, body, identityKey(auth, env), Date.now())
         .run();
       return json({ id: qid }, 201);
     }
@@ -86,7 +89,7 @@ export async function fetchAPI(request: Request, env: Env): Promise<Response> {
           ? "INSERT INTO votes (question_id,user_id) VALUES (?,?) ON CONFLICT DO NOTHING"
           : "DELETE FROM votes WHERE question_id=? AND user_id=?";
       await env.DB.prepare(sql)
-        .bind(id, auth.caller + ":" + auth.sub)
+        .bind(id, identityKey(auth, env))
         .run();
       return json({ ok: true });
     }

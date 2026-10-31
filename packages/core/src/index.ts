@@ -19,6 +19,8 @@ export interface Env {
   API_ORIGIN?: string;
   PUBLIC_ORIGIN?: string;
   CALLER?: Caller;
+  AUTH_PRINCIPAL?: string | null;
+  OIDC_ADMIN_IDENTITIES?: string;
 }
 const encode = (value: string) => new TextEncoder().encode(value);
 async function key(secret: string) {
@@ -81,7 +83,7 @@ export async function verify(
     signature = request.headers.get("x-eqb-signature");
   if (
     !raw ||
-    raw.length > 2048 ||
+    raw.length > 4096 ||
     !signature ||
     !/^[a-f0-9]{64}$/.test(signature)
   )
@@ -96,7 +98,7 @@ export async function verify(
     !["participant", "admin"].includes(a.caller) ||
     typeof a.sub !== "string" ||
     !a.sub ||
-    a.sub.length > 256 ||
+    a.sub.length > 1024 ||
     typeof a.nonce !== "string" ||
     !/^[a-f0-9-]{36}$/.test(a.nonce) ||
     !Number.isFinite(a.time) ||
@@ -128,6 +130,15 @@ export async function verify(
   return a;
 }
 export function requireAdmin(a: Assertion, env: Env) {
+  if (env.AUTH_MODE === "oidc") {
+    let allowed: {issuer:string;subject:string}[] = [];
+    try { allowed = JSON.parse(env.OIDC_ADMIN_IDENTITIES || "[]"); } catch {}
+    if (a.caller !== "admin" || !Array.isArray(allowed) || !allowed.some(e =>
+      typeof e?.issuer === "string" && typeof e?.subject === "string" &&
+      JSON.stringify([e.issuer,e.subject]) === a.sub))
+      throw new HttpError(403, "管理者権限が必要です。");
+    return;
+  }
   const allowed = (env.ADMIN_SUBJECTS || "")
     .split(",")
     .map((x) => x.trim())
@@ -148,6 +159,7 @@ export function visitor(request: Request, env: Env): string | null {
       ?.match(/(?:^|;\s*)eqb_local=(alice|bob|moderator)(?:;|$)/);
     return match?.[1] ?? null;
   }
+  if (env.AUTH_MODE === "oidc") return env.AUTH_PRINCIPAL || null;
   if (env.AUTH_MODE !== "sites") return null;
   return request.headers.get("oai-authenticated-user-id");
 }

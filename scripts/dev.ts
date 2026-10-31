@@ -1,3 +1,4 @@
+if (process.env.NODE_ENV === "production") throw new Error("Development login is disabled in production");
 import { randomBytes } from "node:crypto";
 import { client } from "./client.mjs";
 import { frontend } from "@eqb/core/frontend";

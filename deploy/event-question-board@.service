@@ -1,0 +1,23 @@
+[Unit]
+Description=Event Question Board %i
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=event-question-board
+Group=event-question-board
+WorkingDirectory=/opt/event-question-board
+EnvironmentFile=/etc/event-question-board/%i.env
+ExecStart=/usr/bin/node /opt/event-question-board/dist/node/start.mjs %i
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/event-question-board
+
+[Install]
+WantedBy=multi-user.target
