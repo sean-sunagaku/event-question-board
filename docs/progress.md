@@ -44,9 +44,9 @@ SHA256: `8a310d3eb51f0424d6b367ef3e99b2d39b9873eee8c79e3b2e3e12a14f9927ba`。
 
 ## 残作業
 
-- fresh clone相当の確認、自己レビュー、GitHub push・PR・CI確認・merge。
+- 修正commitのCI確認・merge（fresh clone相当、自己レビュー、push、PR作成は完了）。
 - 同一GitHub commitの3配布物を標準source helperで同期し、version保存・deploy。
-- 本人のAdmin Site固有subjectを明示設定（未設定は拒否）、本番secret設定。
+- 本人subjectと本番secretは設定済み。新ソースの配布後に本番の明示seedと機能確認。
 - 公開実HTTPとブラウザで全操作・認可・永続化・再deployを確認し、実URL/version/commit/PRを記録。
 
 ## GitHubと独立確認
@@ -55,7 +55,48 @@ SHA256: `8a310d3eb51f0424d6b367ef3e99b2d39b9873eee8c79e3b2e3e12a14f9927ba`。
 初回3配布物はすべて同commitの共通ソースから生成。各Sites source SHAはAPI `b3b943752a3cea758ddabcd83eafece2b3ef7e29`、participant `7dc2d11caed42f2156fffe03be7734fd259f0859`、admin `f5a88d5f291daf4330c79843bcbd59863881ae5a`。
 Macの独立確認（設定元タスク報告、Node v26.12.1）: npm ci/build/typecheck/test成功、監査脆弱性0。
 Cloudでgit archiveから作ったfresh clone相当でもnpm ci/build/typecheck/test/DB初期化・seed成功。
-push CI 41150446371はpass、PR CI 41150501646はfail。ログインボタン直後のページ再読込競合を修正し、ローカル再検証成功。新commitのCI待ち。単なるtimeout延長はしていない。
+push CI 41150446371はpass、PR CI 41150501646はfail。ログインボタン直後のページ再読込競合を修正し、ローカル再検証成功。修正commit b4d300aのPR CI成功（run 41151280328）。単なるtimeout延長はしていない。
 本人が正規SitesログインでAdmin /identityを確認。取得したsubjectはSitesのsecret環境変数のみへ登録し、API v1を環境revision 2で再deploy成功。subjectは公開ソースに記載しない。
 
 自己レビューでnonce重複とDB障害を区別するよう修正。新規DBからAdmin画面の明示イベント準備と権限拒否を追加検証。
+
+## 次のCloudタスクへの引継ぎ（2026-10-31 09:39 JST）
+
+**この時点から旧タスクはデプロイを行わない。デプロイ所有権は更新済み環境の仕上げタスクへ引き継ぐ。**
+旧タスクはGitHubのCI確認とPRマージ、記録の保全だけを続ける。並行デプロイしない。
+CI競合修正・明示イベント準備・自己レビュー修正のcommitは `b4d300a96840f645a157c465688c2cbb6b0bdb35`、GitHubへpush済み。
+この修正commitはまだSitesへ配布していない。3サービスとも公開version 1は旧ソース `7725a1a` のまま。
+
+### 既存runtime設定
+
+- API: 環境revision 2。`PARTICIPANT_KEY`、`ADMIN_KEY`、`ADMIN_SUBJECTS` をsecretで設定済み。allowlistは本人の正規Admin Site subjectのみ。
+- participant: 環境revision 1。`PARTICIPANT_KEY`、`API_ORIGIN`、`PUBLIC_ORIGIN` を設定済み。アクセスはpublic。
+- admin: 環境revision 1。`ADMIN_KEY`、`API_ORIGIN`、`PUBLIC_ORIGIN` を設定済み。native get_siteでcustom・owner本人のみ・groupなしを確認。
+- Sites用アダプターが `AUTH_MODE=sites`、`NODE_ENV=production` を強制。ローカル偽認証は本番で有効にならない。
+- 既存の本番環境変数を不用意に消さない。秘密値とsubjectはGitに記載しない。
+- HMACキーは旧タスクのセッションメモリにしか保持していない。Sites secretとしては設定済み。直接署名QAでキーが必要になって取得不能なら、新タスクのメモリでキーを生成し、3サービスを整合した設定へ更新・再deployする。値をチャット・ファイル・Gitへ移さない。
+
+### 保存済みversionと公開deployment
+
+| app | 保存済みversion ID | 成功deployment ID |
+| --- | --- | --- |
+| participant | appgprj_6ae535826d2081919b3acb891c6967d7~appgver_62455cbbbfa481918ca84b450d01af61 | appgdep_6ae53728cbe481918e0bcbbb637b9ccc |
+| admin | appgprj_6ae53592d68c81918db6c5ab89104ba3~appgver_2c7e5abf40b881918e07967c9945551b | appgdep_6ae5371343f081919627ab9619270a20 |
+| api | appgprj_6ae535205f288191ab6e2a4710871590~appgver_4b320e98837c81919143fcd13ef52af1 | appgdep_6ae537cbb5e08191beabc0d795d0ed3a |
+
+APIのnative DB overviewでbinding `DB` と `events`・`questions`・`votes`・`request_nonces` の4表を確認した。マイグレーションは適用済み。
+本番の明示demo seedは旧タスクでは未実施。修正commit配布後、本人のAdmin画面から「架空のイベントを準備する」を実行できる。
+本番操作・権限拒否・同時投票・再deploy後永続化の合格はまだ付けない。
+
+### 新タスクの次の操作
+
+1. GitHubの最新main/PRとこの記録を読み、既存Site IDを再利用。公式helperは環境に追加された `/workspace/tools/openai-sites-1.1.2`、旧タスクで使ったものは `/workspace/work/openai-sites-1.1.2`。
+2. 3ホストが新タスクのHTTP許可に含まれることと実HTTP疎通を確認。
+3. CIが合格した同一GitHub commitから3配布物を生成。既存Sitesはsource credentialを取得し標準source helperで開き、ソース同期・build・version保存・deployする。provenanceとSHAを記録。
+4. 本人のAdminで明示seed後、正規参加者の投稿・投票・解除、Adminの回答済み・強調と自動反映を実公開で確認。
+5. 公開API直呼びの権限拒否、投票の一意性・同時実行、再deployしてもデータ保持、PC/スマートフォンの画面を確認。`scripts/live-check.ts` は秘密のstdinで署名付きAPI QAが可能。ブラウザの正規ログイン確認は別に必要。
+6. この記録を最終版の実測で更新。初回version 1のnative成功だけを機能検証成功にしない。
+
+修正commit `b4d300a` のPR CIは成功: https://github.com/sean-sunagaku/event-question-board/actions/runs/41151280328 。
+ローカル再検証に加え、GitHub上でもbuild・typecheck・HTTPテスト・DB初期化・PC/モバイルのブラウザ操作が合格した。
+API本番events表はnative readで0件と確認。明示seedは次タスクの作業として残っている。
