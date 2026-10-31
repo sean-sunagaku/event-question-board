@@ -17,6 +17,9 @@ jobs:
       - run: npm test
       - run: npm run db:init && npm run db:seed
       - run: npx playwright install --with-deps chromium
+      - run: sudo apt-get update && sudo apt-get install -y libnss3-tools openssl
+      - run: |
+          CHROMIUM_PATH=$(node --input-type=module -e "import {chromium} from '@playwright/test'; console.log(chromium.executablePath())") npm run test:oidc
       - run: |
           npm run dev > /tmp/eqb-dev.log 2>&1 &
           server_pid=$!

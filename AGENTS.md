@@ -40,3 +40,12 @@ Sitesのソース書込み資格情報はセッション内で扱い、ファイ
 利用可能なGitHub接続でPR作成・マージ・公開まで進める。権限不足は正確に報告する。
 受け入れ条件を満たした状態のcommit、Cloud環境・タスクURL、3つのSitesのversionとURL、検証結果を記録する。
 目標を作成できる環境では、ユーザーが依頼したこの全体目標を作成し、公開の検証まで完了にしない。
+
+## 自己ホスト本番OIDC
+
+`docs/self-hosting.md` と追加受け入れ条件を読む。Node専用OIDCコードはWorkerの依存グラフへ入れない。
+署名検証を明示有効化し、state/nonce/PKCE・issuer/audience/期限をライブラリで検証する。利用者をメールやroleで認可しない。
+サービス固有Cookie・セッションDB・opaqueランダム値を分離し、APIのissuer+subject allowlistを強制する。NodeはSitesヘッダーを常に破棄する。
+`npm run build && npm run typecheck && npm test && npm run test:oidc` を実行し、Sitesの既存回帰も維持する。
+OIDC検証は本物の検証用Provider・3本番プロセス・実SQLite・信頼済みTLSで行う。getUserモックやTLS検証無効の結果を本番対応の証拠にしない。
+テストのProvider・固定アカウント・一時CA/秘密鍵を本番配布へ入れない。既存Sites公開証拠は上書きせず、OIDCの証拠は別名で保存する。

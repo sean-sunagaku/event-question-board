@@ -72,7 +72,25 @@
 受け入れ条件に関する追加実装・再公開は不要。PR #2のCI成功・mergeをもって全体目標の完了とする。
 本番スクリーンショットと操作者原結果はCloudでハッシュ確認・目視してGitへ保存。本番バックアップの復元訓練は今回の受け入れ条件外で未検証。手順と権限の注意はREADMEに記載。
 
-## 追加目標: 自己ホスト本番OIDC（進行中）
+## 追加目標: 自己ホスト本番OIDC（実装・Cloud検証合格、CI/再公開中）
 
-本人の追加依頼により `codex/self-host-oidc` で実装・本番モード統合検証・CI/PR/main反映を進める。前回Sites v2の公開証拠は保持する。専用goalツールは提供されていないため、この節とspecの追加受け入れ条件で目標を追跡する。
-Node専用OIDCアダプター、サービス別のSQLiteセッション、厳密なissuer/subject認可、HTTPSと固定origin/proxy検証を実装中。実Providerとの検証は自己署名CAを明示信頼し、Node/ChromiumのTLS検証を無効化しない。
+本人の追加依頼を `codex/self-host-oidc` で実装。専用goal登録ツールは提供されていないため、この節とspecの追加条件で追跡する。実装/検証タスクは同じ [仕上げCloud](https://chatgpt.com/local/01a18f68-6cc3-76e0-93de-3863b5d5c086)。前回のSites v2証拠を保持する。
+
+- Node専用OIDCアダプターと同じUI/BFF/APIを使用。Authorization Code/S256 PKCE、state/nonce、署名・issuer/audience/expをopenid-clientで検証。署名検証も明示有効化。
+- Cookie名とSQLiteセッションDBはサービス別。複数Set-Cookieを個別応答。DBをapp＋issuer＋client ID＋public originへ束縛し、異設定の再利用を起動時に拒否。同一設定のsession/transactionは再起動後も保持。
+- APIはissuer/subject完全一致とAdmin callerで認可。OIDCの投票者キーはSitesと交差しない名前空間。旧Sitesの票キー・D1 migrationは維持。
+- ログアウトでsessionを失効し、Adminも明示ログインリンクだけの完了画面へ遷移。Provider SSOが残っていても自動再ログインしない。IdP全体のログアウトとは区別。
+- 設定不備・Node本番のlocal/Sitesモード・偽Sitesヘッダー・CSRF・Host/proto/proxyの偽造を拒否。startupの設定値やcallback情報をログへ出さない。
+- Node配布物は共通コードとUIをbundle。openid-client/oauth4webapi/joseだけを置いた隔離runtimeで実際に3プロセスを起動し、開発依存を要しないことを確認。
+
+Cloudで `npm run build`、`typecheck`、既存HTTP/SQLiteとSites/HTTP proxy回帰、`test:oidc` が合格。
+[OIDC結果](evidence/oidc-results.json): 本物の検証Providerと3本番プロセス・実SQLiteを信頼済みTLSのHTTPSで接続。ログイン→準備→投稿/投票/解除→Admin操作→3秒自動反映→ログアウトを検証。偽署名・異issuer/audience・期限切れ・state/nonce/PKCE不正・一般ユーザー管理・消費済callback・期限切れ/ログアウト後Cookie・旧sessionの再送を拒否。有効期限内sessionの再送がbearerとして有効なことも明記している。
+TLS無効化フラグは使わず、テストCAを信頼しないNode接続が拒否されることも確認。検証用CAはNSSへ一時追加し、終了時に登録と秘密鍵を削除する。
+
+[OIDC参加者PC](evidence/oidc-participant-1280.png)・[OIDC参加者390](evidence/oidc-participant-390.png)・[OIDC Admin PC](evidence/oidc-admin-1280.png)・[OIDC Admin390](evidence/oidc-admin-390.png)。Cloudで4枚を目視し、可読性・操作部・架空表記・状態バッジを確認。390pxでは投票/解除とAdmin強調の解除/再設定・自動反映も実行。横はみ出し/pageerrorなし。
+
+Mac独立確認は親タスク報告、commit 705633a、Node v26.12.1でnpm ci/build/typecheck/test成功。これは途中commitの既存テスト確認であり、Cloudの最終OIDC HTTPS検証とは区別する。
+実IdPのアカウント・実ドメイン・本番secretは未提供で、その実IdPでのログイン成功は未検証。標準フローを使う再現可能な統合検証は完了。外部アカウント作成・課金・追加ホスト許可は不要。
+
+設定・本番起動・DB移行・scope変更時の全再ログイン・backup復元時のsession破棄・systemd/Nginx・ログ保護は [自己ホスト手順](self-hosting.md)。
+残作業: 最新CIの確認、同一実装commitの既存3 Sites標準更新と公開回帰、最終PR/main反映。

@@ -1,0 +1,44 @@
+{
+  "scope": "production-oidc-real-provider-https",
+  "tlsVerification": true,
+  "browserFallback": "Browser plugin runtime tools unavailable; task explicitly requests reproducible browser integration",
+  "provider": "oidc-provider",
+  "checks": [
+    "verified TLS login/code exchange/ID token signature; explicit setup; post/vote/unvote/admin status/automatic update",
+    "separate Set-Cookie headers and cleanup; participant cookie cannot authenticate Admin even renamed",
+    "untrusted test CA is rejected; TLS verification is enabled, not bypassed",
+    "session is a bounded bearer credential before logout, not falsely claimed replay-proof",
+    "Secure/HttpOnly/host-only/SameSite cookie; CSRF; local login disabled; Sites headers stripped; forged role and strict issuer+subject authorization",
+    "frontend session survives production process restart; API DB and flags survive separate process restart",
+    "PC 1280/mobile 390 render without overflow; mobile vote/unvote and Admin toggle automatically reflected; screenshots; no local fixed-user controls",
+    "logout revokes server session; captured cookie replay rejected",
+    "reject signature",
+    "reject issuer",
+    "reject audience",
+    "reject expired",
+    "reject nonce",
+    "reject state",
+    "reject pkce",
+    "login transaction survives restart; consumed callback replay rejected",
+    "successful reauthentication rotates session and rejects previous cookie",
+    "expired server session rejected",
+    "no page errors",
+    "real OIDC ordinary Admin-site login cannot mutate management API",
+    "Admin logout stays logged out despite active Provider SSO; explicit login link and old cookie rejection",
+    "changed issuer/client/origin/app DB reuse rejected; missing config/local/Sites/HTTP issuer or API/transport fail closed",
+    "OIDC issuer namespaces and legacy Sites voter keys are disjoint"
+  ],
+  "runtimeDependenciesOnly": [
+    "openid-client",
+    "oauth4webapi",
+    "jose"
+  ],
+  "observedAt": "2026-10-31T01:34:58.302Z",
+  "nodeVersion": "v24.19.0",
+  "clientAuthenticationMethods": [
+    "client_secret_basic",
+    "client_secret_post"
+  ],
+  "providerTokenRequests": 11,
+  "allPassed": true
+}

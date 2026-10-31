@@ -82,13 +82,15 @@ Lumaの登録データ取込み、参加者への招待・メール・SNS告知�
 
 前回のSites完成条件と公開証拠を保持し、同じparticipant/Admin/API・共通packagesを設定で自己ホスト本番へ切り替える。実IdPのアカウント作成・課金・外部本番への新規公開は不要。検証用Providerは本番IdP運用製品として配布しない。
 
-- [ ] AUTH_MODE=oidc/sites/localの薄いアダプター分離。Node本番はOIDCのみ、固定開発ログインとSitesヘッダーを拒否する。
-- [ ] 一次資料に基づくAuthorization Code＋S256 PKCE。ライブラリでIDトークン署名・issuer・audience・期限・state・nonceを検証する。
-- [ ] APIで厳密なissuer＋subject allowlistを強制する。メール・role・偽造ヘッダー・参加者資格情報で昇格しない。利用者キーはissuerと認証方式を名前空間化する。
-- [ ] npmの本番コマンドで3サービスを起動し、API DBと各サービス別セッションDBを永続化する。既存DB migrationを維持する。
-- [ ] 複数Set-Cookieを個別応答し、サービス固有名のSecure/HttpOnly/SameSite Cookie、CSRF防止、セッション更新/失効/ログアウト/期限を実測する。
-- [ ] 設定未完・信頼しないproxy/host/origin・HTTPのIdP接続は既定拒否する。外部domain/IdP/secretは設定だけで指定する。
-- [ ] 実Provider・本番モード3プロセス・実SQLiteをTLS検証有効のHTTPSで接続し、ブラウザのログイン→投稿/投票/解除→Admin操作→自動反映→ログアウトを確認する。
-- [ ] 偽署名・異issuer/audience・期限切れ・state/nonce/PKCE不正・一般利用者の管理API・消費済みcallback・ログアウト後/期限切れのセッション再送を拒否する。
-- [ ] 再起動後のDB・セッション・ログインtransaction保持、PC1280/モバイル390、Sites Worker bundle/認可/挙動の回帰を確認する。
+- [x] AUTH_MODE=oidc/sites/localの薄いアダプター分離。Node本番はOIDCのみ、固定開発ログインとSitesヘッダーを拒否する。
+- [x] 一次資料に基づくAuthorization Code＋S256 PKCE。ライブラリでIDトークン署名・issuer・audience・期限・state・nonceを検証する。
+- [x] APIで厳密なissuer＋subject allowlistを強制する。メール・role・偽造ヘッダー・参加者資格情報で昇格しない。利用者キーはissuerと認証方式を名前空間化する。
+- [x] npmの本番コマンドで3サービスを起動し、API DBと各サービス別セッションDBを永続化する。既存DB migrationを維持する。
+- [x] 複数Set-Cookieを個別応答し、サービス固有名のSecure/HttpOnly/SameSite Cookie、CSRF防止、セッション更新/失効/ログアウト/期限を実測する。
+- [x] 設定未完・信頼しないproxy/host/origin・HTTPのIdP接続は既定拒否する。外部domain/IdP/secretは設定だけで指定する。
+- [x] 実Provider・本番モード3プロセス・実SQLiteをTLS検証有効のHTTPSで接続し、ブラウザのログイン→投稿/投票/解除→Admin操作→自動反映→ログアウトを確認する。
+- [x] 偽署名・異issuer/audience・期限切れ・state/nonce/PKCE不正・一般利用者の管理API・消費済みcallback・ログアウト後/期限切れのセッション再送を拒否する。
+- [x] 再起動後のDB・セッション・ログインtransaction保持、PC1280/モバイル390、Sites Worker bundle/認可/挙動の回帰を確認する。
 - [ ] README・AGENTS・環境変数例・本番起動/認証/リバースプロキシ/DB移行/バックアップ手順・CI・秘密を含まない証拠を更新し、CI成功PRをmainへmergeする。
+
+- [ ] 同じCI成功実装commitから既存3 Sitesを標準手順で更新し、ID・公開範囲・秘密設定・保存済みデータを維持して公開回帰とprovenance/versionを記録する。

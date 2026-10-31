@@ -1,7 +1,9 @@
 import { mkdirSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { SQLite } from "./sqlite.ts";
-mkdirSync("work", { recursive: true });
-const db = new SQLite(process.env.DB_PATH || "work/board.sqlite");
+const dbPath = process.env.DB_PATH || "work/board.sqlite";
+mkdirSync(dirname(resolve(dbPath)), { recursive: true });
+const db = new SQLite(dbPath);
 db.raw.exec("CREATE TABLE IF NOT EXISTS migrations (name TEXT PRIMARY KEY)");
 if (!db.raw.prepare("SELECT name FROM migrations WHERE name=?").get("0001")) {
   db.raw.exec("BEGIN");

@@ -131,11 +131,20 @@ export async function verify(
 }
 export function requireAdmin(a: Assertion, env: Env) {
   if (env.AUTH_MODE === "oidc") {
-    let allowed: {issuer:string;subject:string}[] = [];
-    try { allowed = JSON.parse(env.OIDC_ADMIN_IDENTITIES || "[]"); } catch {}
-    if (a.caller !== "admin" || !Array.isArray(allowed) || !allowed.some(e =>
-      typeof e?.issuer === "string" && typeof e?.subject === "string" &&
-      JSON.stringify([e.issuer,e.subject]) === a.sub))
+    let allowed: { issuer: string; subject: string }[] = [];
+    try {
+      allowed = JSON.parse(env.OIDC_ADMIN_IDENTITIES || "[]");
+    } catch {}
+    if (
+      a.caller !== "admin" ||
+      !Array.isArray(allowed) ||
+      !allowed.some(
+        (e) =>
+          typeof e?.issuer === "string" &&
+          typeof e?.subject === "string" &&
+          JSON.stringify([e.issuer, e.subject]) === a.sub,
+      )
+    )
       throw new HttpError(403, "管理者権限が必要です。");
     return;
   }

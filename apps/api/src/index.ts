@@ -8,8 +8,10 @@ import {
 } from "@eqb/contracts";
 import { verify, requireAdmin, type Env } from "@eqb/core";
 // Preserve legacy Sites keys; OIDC keys have a disjoint outer namespace.
-const identityKey = (auth: {caller:string;sub:string}, env:Env) =>
-  env.AUTH_MODE === "oidc" ? `oidc:${auth.caller}:${auth.sub}` : auth.caller + ":" + auth.sub;
+const identityKey = (auth: { caller: string; sub: string }, env: Env) =>
+  env.AUTH_MODE === "oidc"
+    ? `oidc:${auth.caller}:${auth.sub}`
+    : auth.caller + ":" + auth.sub;
 export async function fetchAPI(request: Request, env: Env): Promise<Response> {
   try {
     const url = new URL(request.url);
@@ -88,9 +90,7 @@ export async function fetchAPI(request: Request, env: Env): Promise<Response> {
         request.method === "PUT"
           ? "INSERT INTO votes (question_id,user_id) VALUES (?,?) ON CONFLICT DO NOTHING"
           : "DELETE FROM votes WHERE question_id=? AND user_id=?";
-      await env.DB.prepare(sql)
-        .bind(id, identityKey(auth, env))
-        .run();
+      await env.DB.prepare(sql).bind(id, identityKey(auth, env)).run();
       return json({ ok: true });
     }
     if (action === "status" && request.method === "PATCH") {
