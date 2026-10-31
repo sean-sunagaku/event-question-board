@@ -70,7 +70,7 @@ APIへPARTICIPANT_KEYとADMIN_KEYを別々のsecretで設定。参加者には�
 両BFFにAPI_ORIGIN、自身のPUBLIC_ORIGIN、AUTH_MODE=sitesを設定します。
 Adminの `/identity` に本人がログインして得たSite固有subjectを、APIのADMIN_SUBJECTSへ登録して再deploy。
 空設定は管理操作を拒否します。メール・role・他SiteのIDは管理者登録に使いません。
-イベントseedは登録済み管理者の署名付き `POST /setup/demo` で明示実行します。
+イベントseedは初回のAdmin画面で「架空のイベントを準備する」を押して明示実行します。BFFが署名付き `POST /setup/demo` へ中継し、APIで登録済み管理者を検証します。
 閲覧要求でテーブル作成やseedを実行しません。D1 schema migrationはSites公開時の標準処理に任せます。
 
 ## DBのバックアップ・復元

@@ -1,42 +1,361 @@
-import {test} from 'node:test';import assert from 'node:assert/strict';import {mkdtempSync,readFileSync,rmSync} from 'node:fs';import {tmpdir} from 'node:os';import {join} from 'node:path';
-import {SQLite} from '../scripts/sqlite.ts';import {serve} from '../scripts/server.ts';import {fetchAPI} from '../apps/api/src/index.ts';import {frontend} from '@eqb/core/frontend';import {signedHeaders,visitor,type Env} from '@eqb/core';
-test('3サービス実HTTP・SQLite・認証認可・投票の同時実行・再起動後の永続化',async()=>{
- const dir=mkdtempSync(join(tmpdir(),'eqb-')),path=join(dir,'db.sqlite');let db=new SQLite(path);db.raw.exec(readFileSync('apps/api/drizzle/0000_workable_betty_brant.sql','utf8'));db.raw.prepare('INSERT INTO events VALUES (?,?)').run('demo','架空のテスト');db.raw.prepare('INSERT INTO events VALUES (?,?)').run('other','別イベント');
- const pk='p'.repeat(64),ak='a'.repeat(64),base:Env={DB:db,AUTH_MODE:'local',NODE_ENV:'development',API_ORIGIN:'http://127.0.0.1:13982',ADMIN_SUBJECTS:'moderator'};
- const apiEnv={...base,PARTICIPANT_KEY:pk,ADMIN_KEY:ak};let apiServer=await serve(fetchAPI,apiEnv,13982);const participant=await serve(frontend('participant',''),{...base,PARTICIPANT_KEY:pk},13980),admin=await serve(frontend('admin',''),{...base,ADMIN_KEY:ak},13981);
- const call=async(port:number,path:string,method='GET',body?:unknown,user?:string,extra?:Record<string,string>)=>fetch(`http://127.0.0.1:${port}${path}`,{method,headers:{'content-type':'application/json',origin:`http://127.0.0.1:${port}`,...(user?{cookie:`eqb_local=${user}`} : {}),...extra},body:body===undefined?undefined:JSON.stringify(body)});
- const signed=async(caller:'participant'|'admin',sub:string,path:string,method:string,body:unknown,key=caller==='admin'?ak:pk)=>{const raw=body===undefined?'':JSON.stringify(body),r=new Request('http://127.0.0.1:13982'+path,{method,headers:{'content-type':'application/json'},body:method==='GET'?undefined:raw});for(const[k,v]of Object.entries(await signedHeaders(caller,sub,r,raw,key)))r.headers.set(k,v);return r;};
- try{
-  assert.equal((await call(13980,'/')).status,200);assert.equal((await call(13981,'/')).status,401);
-  assert.equal((await call(13980,'/bff/questions','POST',{body:'未認証'})).status,401);
-  assert.equal((await call(13980,'/bff/questions','POST',{body:'偽造'},undefined,{'oai-authenticated-user-id':'moderator','x-admin':'true'})).status,401);
-  for(const body of ['', '  ', 'あ'.repeat(501),null,123,'a\u0000b'])assert.equal((await call(13980,'/bff/questions','POST',{body},'alice')).status,400);
-  const created=await call(13980,'/bff/questions','POST',{body:'<script>alert(1)</script> 架空の質問'},'alice');assert.equal(created.status,201);const {id}=await created.json();const q='/events/demo/questions/'+id;
-  assert.equal((await call(13980,'/bff/questions')).status,200);
-  const votes=await Promise.all(Array.from({length:30},()=>call(13980,'/bff/questions/'+id+'/vote','PUT',undefined,'bob')));assert.ok(votes.every(r=>r.ok));
-  const listing=await (await call(13980,'/bff/questions','GET',undefined,'bob')).json();assert.equal(listing.questions[0].votes,1);assert.equal(listing.questions[0].voted,1);
-  const replay=await signed('participant','bob',q+'/vote','PUT',undefined);assert.equal((await fetch(replay.clone())).status,200);assert.equal((await fetch(replay)).status,401);
-  const altered=await signed('participant','bob',q+'/vote','PUT',undefined);altered.headers.set('x-eqb-assertion',altered.headers.get('x-eqb-assertion')!.replace('bob','moderator'));assert.equal((await fetch(altered)).status,401);
-  assert.equal((await call(13982,q+'/status','PATCH',{answered:true})).status,401);
-  assert.equal((await call(13982,q+'/status','PATCH',{answered:true},undefined,{'x-user-id':'moderator','x-admin':'true','x-role':'admin'})).status,401);
-  assert.equal((await fetch(await signed('participant','moderator',q+'/status','PATCH',{answered:true}))).status,403);
-  assert.equal((await fetch(await signed('admin','alice',q+'/status','PATCH',{answered:true}))).status,403);
-  assert.equal((await fetch(await signed('admin','moderator',q+'/status','PATCH',{answered:true},pk))).status,401);
-  assert.equal((await call(13980,'/bff/questions/'+id+'/status','PATCH',{answered:true},'moderator')).status,403);
-  assert.equal((await call(13981,'/bff/questions/'+id+'/status','PATCH',{answered:true,highlighted:true},'moderator')).status,200);
-  let data=await (await call(13980,'/bff/questions')).json();assert.equal(data.questions[0].answered,1);assert.equal(data.questions[0].highlighted,1);
-  assert.equal((await call(13981,'/bff/questions/'+id+'/status','PATCH',{role:'admin'},'moderator')).status,400);
-  assert.equal((await call(13980,'/bff/questions','POST',{body:'CSRF'},'alice',{origin:'https://evil.example'})).status,403);
-  assert.equal((await call(13980,'/bff/questions','POST',{body:'CSRF'},'alice',{'sec-fetch-site':'cross-site'})).status,403);
-  assert.equal((await fetch(await signed('admin','moderator','/events/other/questions/'+id+'/status','PATCH',{answered:true}))).status,404);
-  const expired=await signed('admin','moderator',q+'/status','PATCH',{answered:true});const assertion=JSON.parse(expired.headers.get('x-eqb-assertion')!);assertion.time-=60000;expired.headers.set('x-eqb-assertion',JSON.stringify(assertion));assert.equal((await fetch(expired)).status,401);
-  assert.throws(()=>visitor(new Request('https://public.example/'),{...base,NODE_ENV:'production'}));
-  const deny={...apiEnv,ADMIN_SUBJECTS:''};assert.equal((await fetchAPI(await signed('admin','moderator',q+'/status','PATCH',{answered:false}),deny)).status,403);
-  await new Promise<void>(resolve=>apiServer.close(()=>resolve()));db.raw.close();db=new SQLite(path);apiEnv.DB=db;apiServer=await serve(fetchAPI,apiEnv,13982);
-  data=await (await call(13980,'/bff/questions')).json();assert.equal(data.questions[0].votes,1);assert.equal(data.questions[0].answered,1);assert.equal(data.questions[0].body,'<script>alert(1)</script> 架空の質問');
-  assert.equal((await call(13980,'/bff/questions/'+id+'/vote','DELETE',undefined,'bob')).status,200);data=await (await call(13980,'/bff/questions')).json();assert.equal(data.questions[0].votes,0);
-  for(let i=0;i<505;i++)await db.prepare('INSERT INTO questions (id,event_id,body,author_id,created_at,answered) VALUES (?,?,?,?,?,?)').bind(crypto.randomUUID(),'demo','架空の全件検証 '+i,'fixture',Date.now()+i,i%2).run();
-  data=await (await call(13980,'/bff/questions')).json();assert.equal(data.questions.length,506);assert.ok(data.questions.some((q:{id:string})=>q.id===id));
-  const news=await (await call(13980,'/bff/questions?sort=new')).json();assert.equal(news.questions.length,506);assert.equal(news.questions[0].body,'架空の全件検証 504');
- }finally{await Promise.all([apiServer,participant,admin].map(s=>new Promise<void>(resolve=>s.close(()=>resolve()))));db.raw.close();rmSync(dir,{recursive:true,force:true});}
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { SQLite } from "../scripts/sqlite.ts";
+import { serve } from "../scripts/server.ts";
+import { fetchAPI } from "../apps/api/src/index.ts";
+import { frontend } from "@eqb/core/frontend";
+import { signedHeaders, visitor, type Env } from "@eqb/core";
+test("3サービス実HTTP・SQLite・認証認可・投票の同時実行・再起動後の永続化", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "eqb-")),
+    path = join(dir, "db.sqlite");
+  let db = new SQLite(path);
+  db.raw.exec(
+    readFileSync("apps/api/drizzle/0000_workable_betty_brant.sql", "utf8"),
+  );
+  db.raw.prepare("INSERT INTO events VALUES (?,?)").run("demo", "架空のテスト");
+  db.raw.prepare("INSERT INTO events VALUES (?,?)").run("other", "別イベント");
+  const pk = "p".repeat(64),
+    ak = "a".repeat(64),
+    base: Env = {
+      DB: db,
+      AUTH_MODE: "local",
+      NODE_ENV: "development",
+      API_ORIGIN: "http://127.0.0.1:13982",
+      ADMIN_SUBJECTS: "moderator",
+    };
+  const apiEnv = { ...base, PARTICIPANT_KEY: pk, ADMIN_KEY: ak };
+  let apiServer = await serve(fetchAPI, apiEnv, 13982);
+  const participant = await serve(
+      frontend("participant", ""),
+      { ...base, PARTICIPANT_KEY: pk },
+      13980,
+    ),
+    admin = await serve(
+      frontend("admin", ""),
+      { ...base, ADMIN_KEY: ak },
+      13981,
+    );
+  const call = async (
+    port: number,
+    path: string,
+    method = "GET",
+    body?: unknown,
+    user?: string,
+    extra?: Record<string, string>,
+  ) =>
+    fetch(`http://127.0.0.1:${port}${path}`, {
+      method,
+      headers: {
+        "content-type": "application/json",
+        origin: `http://127.0.0.1:${port}`,
+        ...(user ? { cookie: `eqb_local=${user}` } : {}),
+        ...extra,
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+  const signed = async (
+    caller: "participant" | "admin",
+    sub: string,
+    path: string,
+    method: string,
+    body: unknown,
+    key = caller === "admin" ? ak : pk,
+  ) => {
+    const raw = body === undefined ? "" : JSON.stringify(body),
+      r = new Request("http://127.0.0.1:13982" + path, {
+        method,
+        headers: { "content-type": "application/json" },
+        body: method === "GET" ? undefined : raw,
+      });
+    for (const [k, v] of Object.entries(
+      await signedHeaders(caller, sub, r, raw, key),
+    ))
+      r.headers.set(k, v);
+    return r;
+  };
+  try {
+    assert.equal(
+      (await call(13981, "/bff/setup", "POST", {}, "moderator")).status,
+      200,
+    );
+    assert.equal(
+      (await call(13980, "/bff/setup", "POST", {}, "moderator")).status,
+      403,
+    );
+    assert.equal(
+      (await call(13981, "/bff/setup", "POST", {}, "alice")).status,
+      403,
+    );
+    assert.equal((await call(13981, "/bff/setup", "POST", {})).status, 401);
+    assert.equal((await call(13980, "/")).status, 200);
+    assert.equal((await call(13981, "/")).status, 401);
+    assert.equal(
+      (await call(13980, "/bff/questions", "POST", { body: "未認証" })).status,
+      401,
+    );
+    assert.equal(
+      (
+        await call(
+          13980,
+          "/bff/questions",
+          "POST",
+          { body: "偽造" },
+          undefined,
+          { "oai-authenticated-user-id": "moderator", "x-admin": "true" },
+        )
+      ).status,
+      401,
+    );
+    for (const body of ["", "  ", "あ".repeat(501), null, 123, "a\u0000b"])
+      assert.equal(
+        (await call(13980, "/bff/questions", "POST", { body }, "alice")).status,
+        400,
+      );
+    const created = await call(
+      13980,
+      "/bff/questions",
+      "POST",
+      { body: "<script>alert(1)</script> 架空の質問" },
+      "alice",
+    );
+    assert.equal(created.status, 201);
+    const { id } = await created.json();
+    const q = "/events/demo/questions/" + id;
+    assert.equal((await call(13980, "/bff/questions")).status, 200);
+    const votes = await Promise.all(
+      Array.from({ length: 30 }, () =>
+        call(13980, "/bff/questions/" + id + "/vote", "PUT", undefined, "bob"),
+      ),
+    );
+    assert.ok(votes.every((r) => r.ok));
+    const listing = await (
+      await call(13980, "/bff/questions", "GET", undefined, "bob")
+    ).json();
+    assert.equal(listing.questions[0].votes, 1);
+    assert.equal(listing.questions[0].voted, 1);
+    const replay = await signed(
+      "participant",
+      "bob",
+      q + "/vote",
+      "PUT",
+      undefined,
+    );
+    assert.equal((await fetch(replay.clone())).status, 200);
+    assert.equal((await fetch(replay)).status, 401);
+    const altered = await signed(
+      "participant",
+      "bob",
+      q + "/vote",
+      "PUT",
+      undefined,
+    );
+    altered.headers.set(
+      "x-eqb-assertion",
+      altered.headers.get("x-eqb-assertion")!.replace("bob", "moderator"),
+    );
+    assert.equal((await fetch(altered)).status, 401);
+    assert.equal(
+      (await call(13982, q + "/status", "PATCH", { answered: true })).status,
+      401,
+    );
+    assert.equal(
+      (
+        await call(
+          13982,
+          q + "/status",
+          "PATCH",
+          { answered: true },
+          undefined,
+          { "x-user-id": "moderator", "x-admin": "true", "x-role": "admin" },
+        )
+      ).status,
+      401,
+    );
+    assert.equal(
+      (
+        await fetch(
+          await signed("participant", "moderator", q + "/status", "PATCH", {
+            answered: true,
+          }),
+        )
+      ).status,
+      403,
+    );
+    assert.equal(
+      (
+        await fetch(
+          await signed("admin", "alice", q + "/status", "PATCH", {
+            answered: true,
+          }),
+        )
+      ).status,
+      403,
+    );
+    assert.equal(
+      (
+        await fetch(
+          await signed(
+            "admin",
+            "moderator",
+            q + "/status",
+            "PATCH",
+            { answered: true },
+            pk,
+          ),
+        )
+      ).status,
+      401,
+    );
+    assert.equal(
+      (
+        await call(
+          13980,
+          "/bff/questions/" + id + "/status",
+          "PATCH",
+          { answered: true },
+          "moderator",
+        )
+      ).status,
+      403,
+    );
+    assert.equal(
+      (
+        await call(
+          13981,
+          "/bff/questions/" + id + "/status",
+          "PATCH",
+          { answered: true, highlighted: true },
+          "moderator",
+        )
+      ).status,
+      200,
+    );
+    let data = await (await call(13980, "/bff/questions")).json();
+    assert.equal(data.questions[0].answered, 1);
+    assert.equal(data.questions[0].highlighted, 1);
+    assert.equal(
+      (
+        await call(
+          13981,
+          "/bff/questions/" + id + "/status",
+          "PATCH",
+          { role: "admin" },
+          "moderator",
+        )
+      ).status,
+      400,
+    );
+    assert.equal(
+      (
+        await call(13980, "/bff/questions", "POST", { body: "CSRF" }, "alice", {
+          origin: "https://evil.example",
+        })
+      ).status,
+      403,
+    );
+    assert.equal(
+      (
+        await call(13980, "/bff/questions", "POST", { body: "CSRF" }, "alice", {
+          "sec-fetch-site": "cross-site",
+        })
+      ).status,
+      403,
+    );
+    assert.equal(
+      (
+        await fetch(
+          await signed(
+            "admin",
+            "moderator",
+            "/events/other/questions/" + id + "/status",
+            "PATCH",
+            { answered: true },
+          ),
+        )
+      ).status,
+      404,
+    );
+    const expired = await signed("admin", "moderator", q + "/status", "PATCH", {
+      answered: true,
+    });
+    const assertion = JSON.parse(expired.headers.get("x-eqb-assertion")!);
+    assertion.time -= 60000;
+    expired.headers.set("x-eqb-assertion", JSON.stringify(assertion));
+    assert.equal((await fetch(expired)).status, 401);
+    assert.throws(() =>
+      visitor(new Request("https://public.example/"), {
+        ...base,
+        NODE_ENV: "production",
+      }),
+    );
+    const deny = { ...apiEnv, ADMIN_SUBJECTS: "" };
+    assert.equal(
+      (
+        await fetchAPI(
+          await signed("admin", "moderator", q + "/status", "PATCH", {
+            answered: false,
+          }),
+          deny,
+        )
+      ).status,
+      403,
+    );
+    await new Promise<void>((resolve) => apiServer.close(() => resolve()));
+    db.raw.close();
+    db = new SQLite(path);
+    apiEnv.DB = db;
+    apiServer = await serve(fetchAPI, apiEnv, 13982);
+    data = await (await call(13980, "/bff/questions")).json();
+    assert.equal(data.questions[0].votes, 1);
+    assert.equal(data.questions[0].answered, 1);
+    assert.equal(
+      data.questions[0].body,
+      "<script>alert(1)</script> 架空の質問",
+    );
+    assert.equal(
+      (
+        await call(
+          13980,
+          "/bff/questions/" + id + "/vote",
+          "DELETE",
+          undefined,
+          "bob",
+        )
+      ).status,
+      200,
+    );
+    data = await (await call(13980, "/bff/questions")).json();
+    assert.equal(data.questions[0].votes, 0);
+    for (let i = 0; i < 505; i++)
+      await db
+        .prepare(
+          "INSERT INTO questions (id,event_id,body,author_id,created_at,answered) VALUES (?,?,?,?,?,?)",
+        )
+        .bind(
+          crypto.randomUUID(),
+          "demo",
+          "架空の全件検証 " + i,
+          "fixture",
+          Date.now() + i,
+          i % 2,
+        )
+        .run();
+    data = await (await call(13980, "/bff/questions")).json();
+    assert.equal(data.questions.length, 506);
+    assert.ok(data.questions.some((q: { id: string }) => q.id === id));
+    const news = await (await call(13980, "/bff/questions?sort=new")).json();
+    assert.equal(news.questions.length, 506);
+    assert.equal(news.questions[0].body, "架空の全件検証 504");
+  } finally {
+    await Promise.all(
+      [apiServer, participant, admin].map(
+        (s) => new Promise<void>((resolve) => s.close(() => resolve())),
+      ),
+    );
+    db.raw.close();
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

@@ -11,8 +11,12 @@
 
 接続済み環境: `ccarenv_b64_Y2NhcmVudl9kMTk3YWVhOGRjZDA4MTkxYTY0MzJjYmIzZTc3OTRlMg`。
 Cloud上の `/workspace/event-question-board` で主要実装・日本語UI・テストを実施。
-タスクURLは実行コンテキストから取得できていないため未記録。推測URLは書かない。
-環境が公開され別タスクを作成可能かは未検証。
+実装タスク: https://chatgpt.com/local/01a18f54-150b-71e6-bc2e-c64200a1b081
+環境セットアップ: https://chatgpt.com/local/01a18f4e-9130-71ce-836a-c4b8924da09f
+環境「Event Question Board」を公開し、この新規Cloudタスクを開始できたことを設定元タスクがWebで確認。
+公式helper追加で09:28 JST、3公開ホストの許可追加で09:35 JSTに再公開したことも設定元が確認。
+ただし実行中タスクはrevision 1のまま。3ホストはnetwork-policy.jsonに現れず、CONNECT 403が継続。
+利用可能な環境ツールは状態と診断のみで、実行中インスタンスの更新操作はない。
 
 ## 実測済み
 
@@ -26,13 +30,13 @@ Cloud上の `/workspace/event-question-board` で主要実装・日本語UI・�
 - Chromiumで1280px / 390pxの投稿・投票・解除・管理操作・3秒の自動反映を確認。横はみ出し・pageerrorなし。
 - 画面証拠: [参加者PC](evidence/participant-1280.png)、[参加者モバイル](evidence/participant-390.png)、[Admin PC](evidence/admin-1280.png)、[Adminモバイル](evidence/admin-390.png)、[操作結果JSON](evidence/browser-results.json)。すべてローカル検証の証拠。
 
-## Sites登録（まだ公開ではない）
+## Sites初回公開（native deploy成功、公開動作は検証中）
 
 | app | ID | 実公開URL | version |
 | --- | --- | --- | --- |
-| participant | appgprj_6ae535826d2081919b3acb891c6967d7 | 未公開 | なし |
-| admin | appgprj_6ae53592d68c81918db6c5ab89104ba3 | 未公開 | なし |
-| api | appgprj_6ae535205f288191ab6e2a4710871590 | 未公開 | なし |
+| participant | appgprj_6ae535826d2081919b3acb891c6967d7 | https://event-question-board-participant.codex-book.chatgpt.site | 1 |
+| admin | appgprj_6ae53592d68c81918db6c5ab89104ba3 | https://event-question-board-admin.codex-book.chatgpt.site | 1 |
+| api | appgprj_6ae535205f288191ab6e2a4710871590 | https://event-question-board-api.codex-book.chatgpt.site | 1 |
 
 SitesとGitHubのnativeツールは有効。初期Cloudに公式ヘルパーがなかったが、ユーザー提供の公式1.1.2アーカイブをSHA256検証してリポジトリ外に展開した。
 SHA256: `8a310d3eb51f0424d6b367ef3e99b2d39b9873eee8c79e3b2e3e12a14f9927ba`。
@@ -44,3 +48,14 @@ SHA256: `8a310d3eb51f0424d6b367ef3e99b2d39b9873eee8c79e3b2e3e12a14f9927ba`。
 - 同一GitHub commitの3配布物を標準source helperで同期し、version保存・deploy。
 - 本人のAdmin Site固有subjectを明示設定（未設定は拒否）、本番secret設定。
 - 公開実HTTPとブラウザで全操作・認可・永続化・再deployを確認し、実URL/version/commit/PRを記録。
+
+## GitHubと独立確認
+
+実装commit: `7725a1ac605298fbab12ad86489e9ad86534c14a`。PR: https://github.com/sean-sunagaku/event-question-board/pull/1 。
+初回3配布物はすべて同commitの共通ソースから生成。各Sites source SHAはAPI `b3b943752a3cea758ddabcd83eafece2b3ef7e29`、participant `7dc2d11caed42f2156fffe03be7734fd259f0859`、admin `f5a88d5f291daf4330c79843bcbd59863881ae5a`。
+Macの独立確認（設定元タスク報告、Node v26.12.1）: npm ci/build/typecheck/test成功、監査脆弱性0。
+Cloudでgit archiveから作ったfresh clone相当でもnpm ci/build/typecheck/test/DB初期化・seed成功。
+push CI 41150446371はpass、PR CI 41150501646はfail。ログインボタン直後のページ再読込競合を修正し、ローカル再検証成功。新commitのCI待ち。単なるtimeout延長はしていない。
+本人が正規SitesログインでAdmin /identityを確認。取得したsubjectはSitesのsecret環境変数のみへ登録し、API v1を環境revision 2で再deploy成功。subjectは公開ソースに記載しない。
+
+自己レビューでnonce重複とDB障害を区別するよう修正。新規DBからAdmin画面の明示イベント準備と権限拒否を追加検証。
