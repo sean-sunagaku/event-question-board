@@ -72,7 +72,7 @@
 受け入れ条件に関する追加実装・再公開は不要。PR #2のCI成功・mergeをもって全体目標の完了とする。
 本番スクリーンショットと操作者原結果はCloudでハッシュ確認・目視してGitへ保存。本番バックアップの復元訓練は今回の受け入れ条件外で未検証。手順と権限の注意はREADMEに記載。
 
-## 追加目標: 自己ホスト本番OIDC（実装・Cloud検証合格、CI/再公開中）
+## 追加目標: 自己ホスト本番OIDC（実装・CI・Sites v3回帰合格）
 
 本人の追加依頼を `codex/self-host-oidc` で実装。専用goal登録ツールは提供されていないため、この節とspecの追加条件で追跡する。実装/検証タスクは同じ [仕上げCloud](https://chatgpt.com/local/01a18f68-6cc3-76e0-93de-3863b5d5c086)。前回のSites v2証拠を保持する。
 
@@ -111,4 +111,9 @@ API/participantはpublic、Adminはowner本人のみ。秘密値のローテー�
 
 [公開HTTP回帰](evidence/oidc-sites-http.json): API health・participant/BFF=200、未認証Admin=401。未署名/偽造role/偽造Sites identityによる管理=401、participantの準備操作=403、本番local-login=404、偽造edge identityによる投稿=401。
 API更新後、既存2質問の本文・票数・回答済み・強調・時刻がすべて更新前と一致し、participant BFFからも確認した。
-本人Chromeの新version操作回帰結果は確認中。残作業はその結果の記録とPR #3の最終CI/main反映。
+[version 3本人Chrome回帰](evidence/oidc-sites-browser.json)は親タスクの正規ログイン実測報告。既存架空質問2件と状態を保持。既存質問で投票1→2→解除1、回答済み/強調のfalse→trueと両badgeの自動反映、元のfalse/falseへの復帰も自動反映を確認。実寸1280px/390pxの両画面で横はみ出しなし。今回のSites v3回帰は質問を増やさず、投稿操作はOIDC本番統合と旧Sites v2証拠と区別する。
+親側は新versionのJPEG4枚と操作者JSONをローカルへ保存済み（このCloudへは未添付）。Cloud側でも回帰完了後に公開APIとBFFを独立取得し、全2質問の全フィールドが公開前snapshotと一致することを再確認した。旧v2画像をv3の画像として扱わない。
+Macではe506efeのnpm testがHTTP/SQLite・Sites・transportの3 suiteすべてpass。build/typecheckは同一runtimeコードの838472bでpass。
+
+最終記録は [PR #3](https://github.com/sean-sunagaku/event-question-board/pull/3) でmainへ反映。最新head/CI/merge commitは同PRの [checks](https://github.com/sean-sunagaku/event-question-board/pull/3/checks) とmerge情報で追跡できる。配布commit e506efe以降の変更は検証証拠とdocsだけで、アプリ/依存/SQL/本番起動/テスト/CI設定に差分はない。
+追加目標は最終CI成功・PR #3 mergeをもって完了。実IdPアカウントでの接続と外部ドメインへの自己ホスト実配備は未提供・未実施で、検証Providerを使った本番モード適合と明確に区別する。必須の追加実装やSites再公開は不要。

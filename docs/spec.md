@@ -91,6 +91,6 @@ Lumaの登録データ取込み、参加者への招待・メール・SNS告知�
 - [x] 実Provider・本番モード3プロセス・実SQLiteをTLS検証有効のHTTPSで接続し、ブラウザのログイン→投稿/投票/解除→Admin操作→自動反映→ログアウトを確認する。
 - [x] 偽署名・異issuer/audience・期限切れ・state/nonce/PKCE不正・一般利用者の管理API・消費済みcallback・ログアウト後/期限切れのセッション再送を拒否する。
 - [x] 再起動後のDB・セッション・ログインtransaction保持、PC1280/モバイル390、Sites Worker bundle/認可/挙動の回帰を確認する。
-- [ ] README・AGENTS・環境変数例・本番起動/認証/リバースプロキシ/DB移行/バックアップ手順・CI・秘密を含まない証拠を更新し、CI成功PRをmainへmergeする。
+- [x] README・AGENTS・環境変数例・本番起動/認証/リバースプロキシ/DB移行/バックアップ手順・CI・秘密を含まない証拠を更新し、CI成功PRをmainへmergeする。
 
-- [ ] 同じCI成功実装commitから既存3 Sitesを標準手順で更新し、ID・公開範囲・秘密設定・保存済みデータを維持して公開回帰とprovenance/versionを記録する。
+- [x] 同じCI成功実装commitから既存3 Sitesを標準手順で更新し、ID・公開範囲・秘密設定・保存済みデータを維持して公開回帰とprovenance/versionを記録する。

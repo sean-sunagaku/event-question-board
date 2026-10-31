@@ -73,5 +73,21 @@
         "voted": 0
       }
     ]
+  },
+  "afterBrowserRegression": {
+    "observedAt": "2026-10-31T01:46:45.287Z",
+    "questionCount": 2,
+    "results": [
+      {
+        "url": "https://event-question-board-api.codex-book.chatgpt.site/events/demo/questions",
+        "status": 200,
+        "allOriginalFieldsMatch": true
+      },
+      {
+        "url": "https://event-question-board-participant.codex-book.chatgpt.site/bff/questions",
+        "status": 200,
+        "allOriginalFieldsMatch": true
+      }
+    ]
   }
 }

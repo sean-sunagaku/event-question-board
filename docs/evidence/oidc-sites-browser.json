@@ -1,0 +1,51 @@
+{
+  "scope": "published-sites-version-3-browser-regression",
+  "source": "Coordinating task report from regular signed-in Chrome, not Cloud-driven browser",
+  "sourceTask": "https://chatgpt.com/local/01a18f49-3a9a-7393-b295-eb7c11f28c96",
+  "githubCommit": "e506efe06d7a6c0cc2898c7f70727297b56f2159",
+  "sitesVersion": 3,
+  "signInAndExistingDataPreserved": true,
+  "questionCount": 2,
+  "newQuestionPosted": false,
+  "voteCounts": [
+    1,
+    2,
+    1
+  ],
+  "adminAnsweredAndHighlightToggled": true,
+  "automaticParticipantUpdateWithoutReload": true,
+  "originalFalseFalseStateRestored": true,
+  "viewports": [
+    {
+      "innerWidth": 1280,
+      "apps": [
+        "participant",
+        "admin"
+      ],
+      "noHorizontalOverflow": true
+    },
+    {
+      "innerWidth": 390,
+      "apps": [
+        "participant",
+        "admin"
+      ],
+      "noHorizontalOverflow": true
+    }
+  ],
+  "viewportOverrideCleared": true,
+  "screenshots": {
+    "count": 4,
+    "format": "JPEG",
+    "location": "Coordinating task local evidence; not yet attached to this Cloud checkout"
+  },
+  "nativeConfirmation": "Three deployments succeeded; API/participant public, Admin custom with one owner",
+  "independentMacChecks": {
+    "runtimeCodeCommit": "838472b",
+    "build": true,
+    "typecheck": true,
+    "testCommit": "e506efe",
+    "httpSQLiteSitesTransportAllPass": true
+  },
+  "note": "New-question posting is covered by production-mode OIDC integration and previous Sites v2 evidence; this version 3 browser regression intentionally reused existing fictional questions."
+}
