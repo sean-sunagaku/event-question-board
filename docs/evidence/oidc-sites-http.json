@@ -1,0 +1,77 @@
+{
+  "observedAt": "2026-10-31T01:41:41.019Z",
+  "existingQuestionsUnchanged": true,
+  "checks": [
+    {
+      "name": "api health",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "public participant",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "anonymous Admin boundary",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "name": "participant BFF listing",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "name": "unsigned management denied",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "name": "forged identity/role management denied",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "name": "participant cannot setup",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "name": "production local login disabled",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "name": "forged edge identity cannot post",
+      "status": 401,
+      "expected": 401
+    }
+  ],
+  "afterApiDeploy": {
+    "observedAt": "2026-10-31T01:41:17.217Z",
+    "existingQuestionsUnchanged": true,
+    "questions": [
+      {
+        "id": "a0fdc1b3-0078-4ece-8bdd-ed8bcf4f820d",
+        "event_id": "demo",
+        "body": "【架空の公開検証】チームの学びを続ける工夫は？",
+        "created_at": 1793407880061,
+        "answered": 0,
+        "highlighted": 0,
+        "votes": 1,
+        "voted": 0
+      },
+      {
+        "id": "4f3d2b96-ea96-4504-b4cc-12cd376cb2ef",
+        "event_id": "demo",
+        "body": "架空のデモ：AIを日々の小さな作業に取り入れるなら、どこから試すとよいですか？",
+        "created_at": 1793407878890,
+        "answered": 1,
+        "highlighted": 1,
+        "votes": 0,
+        "voted": 0
+      }
+    ]
+  }
+}

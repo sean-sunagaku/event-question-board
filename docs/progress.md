@@ -1,8 +1,8 @@
 # 進捗と公開結果
 
-最終更新: 2026-10-31 JST。実装・3サービス公開・公開検証の受け入れ条件は合格。最終記録はPR #2でmainへ反映し、CI/mergeの確定状態は下記のGitHub記録で追跡できる。
+最終更新: 2026-10-31 JST。前回の3サービス公開ゴールはPR #2で完了。追加の自己ホストOIDCはPR #3で実装・Cloud/CI検証に合格し、同じ実装から既存3 Sitesをversion 3へ更新済み。追加ゴールの最終結果は末尾を参照。
 
-## 公開版
+## 前回公開版の履歴（version 2）
 
 | app | 実URL | version | Sites source SHA |
 | --- | --- | --- | --- |
@@ -63,11 +63,11 @@
 [永続化証拠](evidence/live-persistence.json): 3サービスを同version 2で再deployし、API QAの質問と1票を保持。本人の画面検証完了後に最終状態をsnapshotし、APIをもう一度再deploy。公開APIとparticipant BFFの両方で、架空の質問2件の全フィールドがsnapshotと一致した。
 本人質問は回答済み=1・強調=1・票=0、API QA質問は票=1。テーブル/イベントを上書きしていない。
 
-## GitHub最終反映
+## 前回ゴールのGitHub反映履歴
 
 最終証拠・受け入れ条件は [PR #2](https://github.com/sean-sunagaku/event-question-board/pull/2) でmainへ反映する。最終head commit・merge commit・CIの確定結果は同PRと [checks](https://github.com/sean-sunagaku/event-question-board/pull/2/checks) を参照。配布commit 1107a7a以降の差分は公開検証証拠・受け入れ条件・運用資料のみで、apps/・packages/・scripts/・依存定義・DB schemaは変更していない。そのため公開version 2と最終mainのアプリソースは同一で、記録追加による再公開は不要。
 
-## 残作業と検証範囲
+## 前回ゴールの検証範囲
 
 受け入れ条件に関する追加実装・再公開は不要。PR #2のCI成功・mergeをもって全体目標の完了とする。
 本番スクリーンショットと操作者原結果はCloudでハッシュ確認・目視してGitへ保存。本番バックアップの復元訓練は今回の受け入れ条件外で未検証。手順と権限の注意はREADMEに記載。
@@ -89,8 +89,26 @@ TLS無効化フラグは使わず、テストCAを信頼しないNode接続が�
 
 [OIDC参加者PC](evidence/oidc-participant-1280.png)・[OIDC参加者390](evidence/oidc-participant-390.png)・[OIDC Admin PC](evidence/oidc-admin-1280.png)・[OIDC Admin390](evidence/oidc-admin-390.png)。Cloudで4枚を目視し、可読性・操作部・架空表記・状態バッジを確認。390pxでは投票/解除とAdmin強調の解除/再設定・自動反映も実行。横はみ出し/pageerrorなし。
 
-Mac独立確認は親タスク報告、commit 705633a、Node v26.12.1でnpm ci/build/typecheck/test成功。これは途中commitの既存テスト確認であり、Cloudの最終OIDC HTTPS検証とは区別する。
+Mac独立確認は親タスク報告。Node v26.12.1で705633aのnpm ci/build/typecheck/test成功、さらに838472bのbuild/typecheck/npm test成功。Cloudの最終OIDC HTTPS統合検証とは区別する。通常npm testへtransportを加えた最終実装commitはe506efe。
 実IdPのアカウント・実ドメイン・本番secretは未提供で、その実IdPでのログイン成功は未検証。標準フローを使う再現可能な統合検証は完了。外部アカウント作成・課金・追加ホスト許可は不要。
 
 設定・本番起動・DB移行・scope変更時の全再ログイン・backup復元時のsession破棄・systemd/Nginx・ログ保護は [自己ホスト手順](self-hosting.md)。
-残作業: 最新CIの確認、同一実装commitの既存3 Sites標準更新と公開回帰、最終PR/main反映。
+
+### 最終実装・CI・Sites version 3
+
+最終実装commit: `e506efe06d7a6c0cc2898c7f70727297b56f2159`。
+[push CI 41156198140](https://github.com/sean-sunagaku/event-question-board/actions/runs/41156198140)・[PR CI 41156201802](https://github.com/sean-sunagaku/event-question-board/actions/runs/41156201802)ともにsuccess。OIDC HTTPS・transport・既存ブラウザのすべてを含む。
+
+| app | 現在version | Sites source SHA | deployment |
+| --- | --- | --- | --- |
+| api | 3 | 5bc040aba75fb1343d2b11a31635d97569524503 | appgdep_6ae54707942081919a2afd771077142e |
+| participant | 3 | 303968fdb900efd361592760df040f8a717bcc11 | appgdep_6ae54727db208191912b425d46a8200b |
+| admin | 3 | 5602efac5908b0e30865f95d6c7b654bd8adc0c6 | appgdep_6ae54749bac881918e9c0a8a0a4f33eb |
+
+実URL・Site IDは上のversion 2表と同一。既存sourceを標準helperで開き、同一commitから配布→build-site→source push/archive→version保存→deployを実行し、3件ともsucceeded。
+[完全なversion/deployment/archive記録](evidence/oidc-sites-release.json)と[配布79ファイル全件照合](evidence/oidc-sites-source-correspondence.json)。
+API/participantはpublic、Adminはowner本人のみ。秘密値のローテーション・env更新は行わず、env revisionはAPI=3、participant=2、admin=2のまま。本人subjectも維持した。
+
+[公開HTTP回帰](evidence/oidc-sites-http.json): API health・participant/BFF=200、未認証Admin=401。未署名/偽造role/偽造Sites identityによる管理=401、participantの準備操作=403、本番local-login=404、偽造edge identityによる投稿=401。
+API更新後、既存2質問の本文・票数・回答済み・強調・時刻がすべて更新前と一致し、participant BFFからも確認した。
+本人Chromeの新version操作回帰結果は確認中。残作業はその結果の記録とPR #3の最終CI/main反映。
