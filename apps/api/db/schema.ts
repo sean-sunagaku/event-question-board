@@ -1,0 +1,6 @@
+import {sql} from 'drizzle-orm';
+import {sqliteTable,text,integer,primaryKey,index,check} from 'drizzle-orm/sqlite-core';
+export const events=sqliteTable('events',{id:text('id').primaryKey(),name:text('name').notNull()});
+export const questions=sqliteTable('questions',{id:text('id').primaryKey(),event_id:text('event_id').notNull().references(()=>events.id),body:text('body').notNull(),author_id:text('author_id').notNull(),created_at:integer('created_at').notNull(),answered:integer('answered').notNull().default(0),highlighted:integer('highlighted').notNull().default(0)},t=>[index('questions_event').on(t.event_id,t.created_at),check('body_length',sql`length(${t.body}) between 1 and 1000`),check('answered_boolean',sql`${t.answered} in (0,1)`),check('highlighted_boolean',sql`${t.highlighted} in (0,1)`)]);
+export const votes=sqliteTable('votes',{question_id:text('question_id').notNull().references(()=>questions.id,{onDelete:'cascade'}),user_id:text('user_id').notNull()},t=>[primaryKey({columns:[t.question_id,t.user_id]})]);
+export const nonces=sqliteTable('request_nonces',{nonce:text('nonce').primaryKey(),expires_at:integer('expires_at').notNull()},t=>[index('nonce_expiry').on(t.expires_at)]);

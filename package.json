@@ -1,10 +1,1 @@
-{
-  "name": "event-question-board",
-  "version": "0.1.0",
-  "private": true,
-  "description": "OSS event question and voting board with three independently deployed services",
-  "engines": { "node": ">=22" },
-  "workspaces": ["apps/*", "packages/*"],
-  "scripts": { "check:bootstrap": "node scripts/check-bootstrap.mjs" },
-  "license": "MIT"
-}
+{"name":"event-question-board","version":"0.1.0","private":true,"type":"module","engines":{"node":">=22.13"},"workspaces":["apps/*","packages/*"],"scripts":{"check:bootstrap":"node scripts/check-bootstrap.mjs","db:init":"node --import tsx scripts/db.ts","db:seed":"node --import tsx scripts/db.ts seed","dev":"node --import tsx scripts/dev.ts","typecheck":"tsc --noEmit","test":"node --import tsx --test tests/*.test.ts","test:e2e":"node --import tsx --test tests/http.test.ts","build":"node scripts/build.mjs","package:sites":"node scripts/package-sites.mjs"},"devDependencies":{"@playwright/test":"^1.64.1","@types/node":"^24.0.0","esbuild":"^0.25.0","tsx":"^4.20.0","typescript":"^5.9.0"},"license":"MIT"}
