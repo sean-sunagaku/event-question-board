@@ -1,0 +1,20 @@
+[
+  {
+    "app": "api",
+    "githubCommit": "e506efe06d7a6c0cc2898c7f70727297b56f2159",
+    "verifiedFiles": 79,
+    "allFilesMatch": true
+  },
+  {
+    "app": "participant",
+    "githubCommit": "e506efe06d7a6c0cc2898c7f70727297b56f2159",
+    "verifiedFiles": 79,
+    "allFilesMatch": true
+  },
+  {
+    "app": "admin",
+    "githubCommit": "e506efe06d7a6c0cc2898c7f70727297b56f2159",
+    "verifiedFiles": 79,
+    "allFilesMatch": true
+  }
+]

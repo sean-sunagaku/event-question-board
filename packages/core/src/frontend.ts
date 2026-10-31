@@ -17,7 +17,9 @@ export function frontend(caller: Caller, clientJS: string) {
         return json({
           subject: user,
           notice:
-            "このAdmin Site内のIDです。APIのADMIN_SUBJECTSへ設定してください。",
+            env.AUTH_MODE === "oidc"
+              ? "OIDCのissuer/subjectです。APIのOIDC_ADMIN_IDENTITIESへ設定してください。"
+              : "このAdmin Site内のIDです。APIのADMIN_SUBJECTSへ設定してください。",
         });
       }
       if (url.pathname === "/health")
@@ -52,7 +54,12 @@ export function frontend(caller: Caller, clientJS: string) {
         if (caller === "admin" && !user)
           return new Response("ログインが必要です。", { status: 401 });
         return new Response(
-          page(caller === "admin", !!user, env.AUTH_MODE === "local"),
+          page(
+            caller === "admin",
+            !!user,
+            env.AUTH_MODE === "local",
+            env.AUTH_MODE === "oidc",
+          ),
           {
             headers: {
               "content-type": "text/html; charset=utf-8",

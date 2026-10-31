@@ -25,8 +25,8 @@ npm run dev
 ローカル専用の参加者A/B/管理者ボタンで切替できます。Adminへ最初に入るときは参加者画面で「管理者」を選んでから開きます。
 これはループバックの開発モード限定です。本番bundleはSites認証とproductionを強制し、偽認証を有効にできません。
 開発用キーは起動時に暗号学的乱数で生成し、メモリ内だけで共有します。
-個別起動は各workspaceの `npm run start`。独立プロセス間のキー・API_ORIGIN等は `.env.example` を参照し、環境変数として渡します。
-標準のNodeサーバーはループバックにbindし、Sitesの認証ヘッダーを破棄します。セルフホスト本番公開時は信頼する認証アダプターの追加が必要です。
+開発時の個別起動は各workspaceの `npm run start`。本番は末尾のOIDC手順とrootの `npm start -- <app>` を使います。独立プロセス間のキー・API_ORIGIN等は `.env.example` を参照し、環境変数として渡します。
+標準のNodeサーバーはループバックにbindし、Sitesの認証ヘッダーを破棄します。自己ホスト本番は標準OIDCアダプターを利用できます。
 
 ```sh
 npm test             # 3サービス実HTTP、実SQLite、同時実行、認可、再起動、506件一覧
@@ -82,3 +82,9 @@ WAL稼働中のDBファイルだけのコピーは避けます。復元は停止
 このタスクではバックアップを実際に復元する本番操作は未検証です。Sitesがその管理権限を提供しない場合は運用サポートが必要です。
 
 MITライセンス。仕様・受け入れ条件は [docs/spec.md](docs/spec.md)、エージェント指示は [AGENTS.md](AGENTS.md)。
+
+## 自己ホスト本番（OIDC）
+
+`npm run build` 後、サービス別の設定で `npm start -- participant`・`admin`・`api` を別プロセスとして起動します。標準OIDCのAuthorization Code＋PKCE、永続SQLiteセッション、APIのissuer＋subject認可を使います。Node本番はSitesヘッダーと固定開発ログインを受け入れません。
+
+IdPのclient登録、HTTPS/origin/proxy、Cookie・ログアウト、DB移行・バックアップ、systemd/Nginx、実Providerを使ったTLS検証有効のテストは [自己ホスト本番手順](docs/self-hosting.md) を参照してください。Sitesの既存ID・公開設定・実装との共用を維持しています。
