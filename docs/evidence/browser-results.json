@@ -1,0 +1,24 @@
+[
+  {
+    "width": 1280,
+    "post": true,
+    "vote": true,
+    "unvote": true,
+    "answered": true,
+    "highlight": true,
+    "automaticUpdate": true,
+    "noHorizontalOverflow": true,
+    "pageErrors": []
+  },
+  {
+    "width": 390,
+    "post": true,
+    "vote": true,
+    "unvote": true,
+    "answered": true,
+    "highlight": true,
+    "automaticUpdate": true,
+    "noHorizontalOverflow": true,
+    "pageErrors": []
+  }
+]

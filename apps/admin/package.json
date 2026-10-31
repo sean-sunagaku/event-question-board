@@ -1,0 +1,15 @@
+{
+  "name": "@eqb/admin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node ../../scripts/build.mjs admin",
+    "start": "node --import tsx ../../scripts/serve.ts admin"
+  },
+  "dependencies": {
+    "@eqb/contracts": "*",
+    "@eqb/core": "*",
+    "@eqb/ui": "*"
+  }
+}
