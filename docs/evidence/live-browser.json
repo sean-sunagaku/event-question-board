@@ -1,0 +1,67 @@
+{
+  "scope": "production-ui",
+  "verificationSource": "Authenticated Chrome operated by source task 01a18f49-3a9a-7393-b295-eb7c11f28c96; reported to finishing task via codex_delegation",
+  "sourceTask": "https://chatgpt.com/local/01a18f49-3a9a-7393-b295-eb7c11f28c96",
+  "versions": {
+    "participant": 2,
+    "admin": 2,
+    "api": 2
+  },
+  "realChatGPTSignIn": true,
+  "explicitAdminEventSetup": true,
+  "questionId": "4f3d2b96-ea96-4504-b4cc-12cd376cb2ef",
+  "questionBody": "架空のデモ：AIを日々の小さな作業に取り入れるなら、どこから試すとよいですか？",
+  "post": true,
+  "voteCount": 1,
+  "afterUnvote": 0,
+  "answered": true,
+  "highlighted": true,
+  "automaticParticipantUpdateWithoutReload": true,
+  "viewports": [
+    {
+      "innerWidth": 1280,
+      "participantNoHorizontalOverflow": true,
+      "adminNoHorizontalOverflow": true
+    },
+    {
+      "innerWidth": 390,
+      "participantNoHorizontalOverflow": true,
+      "adminNoHorizontalOverflow": true,
+      "voteAndUnvote": true,
+      "answeredToggle": true,
+      "highlightToggle": true,
+      "automaticParticipantUpdateWithoutReload": true
+    }
+  ],
+  "finalState": {
+    "answered": 1,
+    "highlighted": 1,
+    "ownerVotes": 0
+  },
+  "screenshots": {
+    "location": "docs/evidence; uploaded archive SHA-256 verified and all four JPEGs visually reviewed in finishing Cloud task",
+    "archiveSha256": "9b5ebc3f3ae278a8f3c05330430b147a63f81fc05dbd10e4fe10a75c661f36d5",
+    "files": [
+      "published-participant-1280.jpg",
+      "published-participant-390.jpg",
+      "published-admin-1280.jpg",
+      "published-admin-390.jpg"
+    ],
+    "sha256": {
+      "published-participant-1280.jpg": "434add5c7b6fa4ef6a9d6695083921a47c7d7d489c1ba33154be67288bc77baf",
+      "published-participant-390.jpg": "1ae5a6285495ce83598e9a88949fdb9c500389cf3e2f57e3432086ef3d397503",
+      "published-admin-1280.jpg": "bad4a10edd010331944413f18db3ba892cf57d0c521b61a4018568071abfbeca",
+      "published-admin-390.jpg": "361dc7d5fe2e937e844e32cc3f9c456ace1f271b6adf09bc8ebc8d7180b1ebb7"
+    },
+    "originalOperatorReport": "published-browser-results.json",
+    "cloudVisualReview": {
+      "allFourImagesViewed": true,
+      "japaneseTextReadable": true,
+      "fictionalDataLabelVisible": true,
+      "answeredAndHighlightedBadgesVisible": true,
+      "mobileControlsWithinViewport": true,
+      "visibleCookieSubjectEmailOrSecret": false
+    }
+  },
+  "independentCloudConfirmation": "Question and final status flags verified through live API, including after redeployment; see live-persistence.json"
+}

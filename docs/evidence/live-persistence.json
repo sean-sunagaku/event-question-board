@@ -1,0 +1,70 @@
+{
+  "scope": "production-api-after-redeployment",
+  "beforeAt": "2026-10-31T00:53:25.879Z",
+  "afterAt": "2026-10-31T00:54:23.966Z",
+  "httpStatus": 200,
+  "matches": [
+    {
+      "id": "a0fdc1b3-0078-4ece-8bdd-ed8bcf4f820d",
+      "body": "【架空の公開検証】チームの学びを続ける工夫は？",
+      "votes": 1,
+      "answered": 0,
+      "highlighted": 0,
+      "unchanged": true
+    },
+    {
+      "id": "4f3d2b96-ea96-4504-b4cc-12cd376cb2ef",
+      "body": "架空のデモ：AIを日々の小さな作業に取り入れるなら、どこから試すとよいですか？",
+      "votes": 0,
+      "answered": 1,
+      "highlighted": 1,
+      "unchanged": true
+    }
+  ],
+  "allRecordsPersisted": true,
+  "afterAllThreeRedeployed": {
+    "observedAt": "2026-10-31T00:55:18.331Z",
+    "participantBffStatus": 200,
+    "apiQaRecordUnchanged": true,
+    "questionId": "a0fdc1b3-0078-4ece-8bdd-ed8bcf4f820d",
+    "note": "The other question highlight changed during concurrent browser QA, so no full equality claim is made at this later time. Full state equality was measured immediately after API redeployment above."
+  },
+  "finalBrowserStateAfterApiRedeploy": {
+    "beforeAt": "2026-10-31T00:56:55.770Z",
+    "afterAt": "2026-10-31T00:57:30.867Z",
+    "questions": [
+      {
+        "id": "a0fdc1b3-0078-4ece-8bdd-ed8bcf4f820d",
+        "event_id": "demo",
+        "body": "【架空の公開検証】チームの学びを続ける工夫は？",
+        "created_at": 1793407880061,
+        "answered": 0,
+        "highlighted": 0,
+        "votes": 1,
+        "voted": 0
+      },
+      {
+        "id": "4f3d2b96-ea96-4504-b4cc-12cd376cb2ef",
+        "event_id": "demo",
+        "body": "架空のデモ：AIを日々の小さな作業に取り入れるなら、どこから試すとよいですか？",
+        "created_at": 1793407878890,
+        "answered": 1,
+        "highlighted": 1,
+        "votes": 0,
+        "voted": 0
+      }
+    ],
+    "results": [
+      {
+        "url": "https://event-question-board-api.codex-book.chatgpt.site/events/demo/questions",
+        "status": 200,
+        "allRecordsExactlyMatch": true
+      },
+      {
+        "url": "https://event-question-board-participant.codex-book.chatgpt.site/bff/questions",
+        "status": 200,
+        "allRecordsExactlyMatch": true
+      }
+    ]
+  }
+}

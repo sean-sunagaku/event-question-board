@@ -57,7 +57,7 @@ APIのみが永続DBを所有し、全質問は未認証でも公開、書込み
 GitHubが正本です。標準Sitesプラグインのヘルパーは外部ツールとして使用し、このOSSには同梱しません。
 既存IDは `apps/*/.openai/hosting.json` に保存し、再登録しません。
 
-1. 各Site用のリポジトリ外の空ディレクトリで公式 `project-setup.mjs` を実行。
+1. 既存Siteはget_siteとsource credentialを取得し、公式source helperでソースを開く。返されたcheckoutを再利用する。初回だけ、各Site用のリポジトリ外の空ディレクトリで公式 `project-setup.mjs` を実行。
 2. 変更を `codex/` ブランチでcommitし、GitHubへpush。
 3. 各appに `npm run package:sites -- api /absolute/prepared-starter` 等を実行。共有コードからbundleと元commitのoss/を生成。
 4. 公式 `install-dependencies.mjs`、APIの `npm run db:generate` を実行。SQLとメタデータは `apps/api/drizzle` の正本と一致することを確認。

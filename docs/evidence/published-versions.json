@@ -1,0 +1,189 @@
+{
+  "final_api_redeployment": {
+    "id": "appgdep_6ae53ce01bb08191a38ec4f7aadc11d7",
+    "project_id": "appgprj_6ae535205f288191ab6e2a4710871590",
+    "title": "ひろば 共通API",
+    "version_id": "appgprj_6ae535205f288191ab6e2a4710871590~appgver_760249c2920481919ae4c7d5c285d849",
+    "type": "publish",
+    "status": "succeeded",
+    "url": "https://event-question-board-api.codex-book.chatgpt.site",
+    "has_mcp": false,
+    "screenshot_asset_pointer": null,
+    "provider_deployment_id": "site---6ae535205f288191ab6e2a4710871590",
+    "failure_message": null,
+    "env_set_revision": 3,
+    "updated_at": "2026-10-31T00:57:16.140391+00:00"
+  },
+  "redeployments": {
+    "api": {
+      "id": "appgdep_6ae53c10b78c8191b9dd88e12d7e1341",
+      "project_id": "appgprj_6ae535205f288191ab6e2a4710871590",
+      "title": "ひろば 共通API",
+      "version_id": "appgprj_6ae535205f288191ab6e2a4710871590~appgver_760249c2920481919ae4c7d5c285d849",
+      "type": "publish",
+      "status": "succeeded",
+      "url": "https://event-question-board-api.codex-book.chatgpt.site",
+      "has_mcp": false,
+      "screenshot_asset_pointer": null,
+      "provider_deployment_id": "site---6ae535205f288191ab6e2a4710871590",
+      "failure_message": null,
+      "env_set_revision": 3,
+      "updated_at": "2026-10-31T00:53:48.678357+00:00"
+    },
+    "participant": {
+      "id": "appgdep_6ae53c269b688191b2ecb186779758f0",
+      "project_id": "appgprj_6ae535826d2081919b3acb891c6967d7",
+      "title": "ひろば みんなの質問",
+      "version_id": "appgprj_6ae535826d2081919b3acb891c6967d7~appgver_9e56eb5916988191b0d11396e85dfd64",
+      "type": "publish",
+      "status": "succeeded",
+      "url": "https://event-question-board-participant.codex-book.chatgpt.site",
+      "has_mcp": false,
+      "screenshot_asset_pointer": null,
+      "provider_deployment_id": "site---6ae535826d2081919b3acb891c6967d7",
+      "failure_message": null,
+      "env_set_revision": 2,
+      "updated_at": "2026-10-31T00:54:10.150838+00:00"
+    },
+    "admin": {
+      "id": "appgdep_6ae53c375d5c8191917289735a1eecd9",
+      "project_id": "appgprj_6ae53592d68c81918db6c5ab89104ba3",
+      "title": "ひろば 管理",
+      "version_id": "appgprj_6ae53592d68c81918db6c5ab89104ba3~appgver_e4e5f07fe9ec819198773155bf10b854",
+      "type": "publish",
+      "status": "succeeded",
+      "url": "https://event-question-board-admin.codex-book.chatgpt.site",
+      "has_mcp": false,
+      "screenshot_asset_pointer": null,
+      "provider_deployment_id": "site---6ae53592d68c81918db6c5ab89104ba3",
+      "failure_message": null,
+      "env_set_revision": 2,
+      "updated_at": "2026-10-31T00:54:26.676462+00:00"
+    }
+  },
+  "github_commit": "1107a7a2e9413905e6e71c595554ed1161650bc4",
+  "ci": "https://github.com/sean-sunagaku/event-question-board/actions/runs/41151504664",
+  "task": "https://chatgpt.com/local/01a18f68-6cc3-76e0-93de-3863b5d5c086",
+  "sites": {
+    "api": {
+      "package": {
+        "project_id": "appgprj_6ae535205f288191ab6e2a4710871590",
+        "checkout_path": "/workspace/work/sites/api",
+        "commit_sha": "c9127e6087f5f286df6a22421280149f2826811b",
+        "archive": "/workspace/work/api-1107a7a.tar.gz"
+      },
+      "version": {
+        "id": "appgprj_6ae535205f288191ab6e2a4710871590~appgver_760249c2920481919ae4c7d5c285d849",
+        "project_id": "appgprj_6ae535205f288191ab6e2a4710871590",
+        "version_number": 2,
+        "source": {
+          "commit_sha": "c9127e6087f5f286df6a22421280149f2826811b"
+        },
+        "archive_storage": {
+          "archive_format": "tar",
+          "sediment_file_id": "file_0000000049b4820689d46c994eec0463",
+          "content_hash": "sha256:9c660704a873accc0d17b8fe7d1209ecc5ecaf76f751bce72922e4379a55565e",
+          "size_bytes": 696320,
+          "file_count": 27
+        },
+        "screenshot_url": null,
+        "deployment_id": null
+      },
+      "deployment": {
+        "id": "appgdep_6ae53ab8d47081918d3459e01b48da54",
+        "project_id": "appgprj_6ae535205f288191ab6e2a4710871590",
+        "title": "ひろば 共通API",
+        "version_id": "appgprj_6ae535205f288191ab6e2a4710871590~appgver_760249c2920481919ae4c7d5c285d849",
+        "type": "publish",
+        "status": "succeeded",
+        "url": "https://event-question-board-api.codex-book.chatgpt.site",
+        "has_mcp": false,
+        "screenshot_asset_pointer": null,
+        "provider_deployment_id": "site---6ae535205f288191ab6e2a4710871590",
+        "failure_message": null,
+        "env_set_revision": 3,
+        "updated_at": "2026-10-31T00:48:05.184350+00:00"
+      }
+    },
+    "participant": {
+      "package": {
+        "project_id": "appgprj_6ae535826d2081919b3acb891c6967d7",
+        "checkout_path": "/workspace/work/sites/participant",
+        "commit_sha": "8f669cd260da1efb165f9f04371d5fbe7497def6",
+        "archive": "/workspace/work/participant-1107a7a.tar.gz"
+      },
+      "version": {
+        "id": "appgprj_6ae535826d2081919b3acb891c6967d7~appgver_9e56eb5916988191b0d11396e85dfd64",
+        "project_id": "appgprj_6ae535826d2081919b3acb891c6967d7",
+        "version_number": 2,
+        "source": {
+          "commit_sha": "8f669cd260da1efb165f9f04371d5fbe7497def6"
+        },
+        "archive_storage": {
+          "archive_format": "tar",
+          "sediment_file_id": "file_00000000e928820691b10b3e25a45475",
+          "content_hash": "sha256:d05e911171954fdba3d1221cde59862b7fffc65df36bcfcfe16bf58dc77a39c3",
+          "size_bytes": 706560,
+          "file_count": 25
+        },
+        "screenshot_url": null,
+        "deployment_id": null
+      },
+      "deployment": {
+        "id": "appgdep_6ae53ad4bc4c81918c4a742101017271",
+        "project_id": "appgprj_6ae535826d2081919b3acb891c6967d7",
+        "title": "ひろば みんなの質問",
+        "version_id": "appgprj_6ae535826d2081919b3acb891c6967d7~appgver_9e56eb5916988191b0d11396e85dfd64",
+        "type": "publish",
+        "status": "succeeded",
+        "url": "https://event-question-board-participant.codex-book.chatgpt.site",
+        "has_mcp": false,
+        "screenshot_asset_pointer": null,
+        "provider_deployment_id": "site---6ae535826d2081919b3acb891c6967d7",
+        "failure_message": null,
+        "env_set_revision": 2,
+        "updated_at": "2026-10-31T00:48:32.438354+00:00"
+      }
+    },
+    "admin": {
+      "package": {
+        "project_id": "appgprj_6ae53592d68c81918db6c5ab89104ba3",
+        "checkout_path": "/workspace/work/sites/admin",
+        "commit_sha": "1c238dde1ad9e099f98e6d8b782e1ffbe9516d15",
+        "archive": "/workspace/work/admin-1107a7a.tar.gz"
+      },
+      "version": {
+        "id": "appgprj_6ae53592d68c81918db6c5ab89104ba3~appgver_e4e5f07fe9ec819198773155bf10b854",
+        "project_id": "appgprj_6ae53592d68c81918db6c5ab89104ba3",
+        "version_number": 2,
+        "source": {
+          "commit_sha": "1c238dde1ad9e099f98e6d8b782e1ffbe9516d15"
+        },
+        "archive_storage": {
+          "archive_format": "tar",
+          "sediment_file_id": "file_00000000ef588206b2851417f70c75db",
+          "content_hash": "sha256:060fda3a166b3d43f948c1f57aa4a40d2d120a4d3d71650927a40cf63b1aabd0",
+          "size_bytes": 706560,
+          "file_count": 25
+        },
+        "screenshot_url": null,
+        "deployment_id": "appgdep_6ae53aebaaa8819196681fccface0355"
+      },
+      "deployment": {
+        "id": "appgdep_6ae53aebaaa8819196681fccface0355",
+        "project_id": "appgprj_6ae53592d68c81918db6c5ab89104ba3",
+        "title": "ひろば 管理",
+        "version_id": "appgprj_6ae53592d68c81918db6c5ab89104ba3~appgver_e4e5f07fe9ec819198773155bf10b854",
+        "type": "publish",
+        "status": "succeeded",
+        "url": "https://event-question-board-admin.codex-book.chatgpt.site",
+        "has_mcp": false,
+        "screenshot_asset_pointer": null,
+        "provider_deployment_id": "site---6ae53592d68c81918db6c5ab89104ba3",
+        "failure_message": null,
+        "env_set_revision": 2,
+        "updated_at": "2026-10-31T00:48:55.499729+00:00"
+      }
+    }
+  }
+}
