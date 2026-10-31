@@ -1,6 +1,6 @@
 # 進捗と公開結果
 
-最終更新: 2026-10-31 JST。実装・3サービス公開・公開検証の受け入れ条件は合格。最終記録のPR/CI/main反映は下記「GitHub最終反映」で確認する。
+最終更新: 2026-10-31 JST。実装・3サービス公開・公開検証の受け入れ条件は合格。最終記録はPR #2でmainへ反映し、CI/mergeの確定状態は下記のGitHub記録で追跡できる。
 
 ## 公開版
 
@@ -65,9 +65,9 @@
 
 ## GitHub最終反映
 
-この節は最終記録PRのCI・merge確認後に確定する。配布commit以降の変更は、公開検証証拠・受け入れ条件・運用資料のみで、実装や配布物は変えない。
+最終証拠・受け入れ条件は [PR #2](https://github.com/sean-sunagaku/event-question-board/pull/2) でmainへ反映する。最終head commit・merge commit・CIの確定結果は同PRと [checks](https://github.com/sean-sunagaku/event-question-board/pull/2/checks) を参照。配布commit 1107a7a以降の差分は公開検証証拠・受け入れ条件・運用資料のみで、apps/・packages/・scripts/・依存定義・DB schemaは変更していない。そのため公開version 2と最終mainのアプリソースは同一で、記録追加による再公開は不要。
 
 ## 残作業と検証範囲
 
-受け入れ条件に関する追加実装・再公開は不要。最終記録のmain反映を完了すれば全体目標は完了。
+受け入れ条件に関する追加実装・再公開は不要。PR #2のCI成功・mergeをもって全体目標の完了とする。
 本番スクリーンショットと操作者原結果はCloudでハッシュ確認・目視してGitへ保存。本番バックアップの復元訓練は今回の受け入れ条件外で未検証。手順と権限の注意はREADMEに記載。
